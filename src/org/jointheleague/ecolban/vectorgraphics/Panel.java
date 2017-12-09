@@ -13,19 +13,15 @@ import java.awt.event.MouseMotionAdapter;
 import java.awt.geom.Point2D;
 import java.util.concurrent.ThreadLocalRandom;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
-import javax.swing.Timer;
+import javax.swing.*;
 
-@SuppressWarnings("serial")
 public class Panel extends JPanel {
 
 	private final Point2D p0 = new Point2D.Double();
 	private final Point2D p1 = new Point2D.Double();
 	private final Point2D p2 = new Point2D.Double();
-	// private final Point2D p3 = new Point2D.Double();
-	private final Point2D[] points = { p0, p1, p2 };
+	private final Point2D p3 = new Point2D.Double();
+	private final Point2D[] points = { p0, p1, p2, p3 };
 	private Point2D selected;
 
 	private Timer ticker = new Timer(10, e -> onTick());
@@ -47,7 +43,7 @@ public class Panel extends JPanel {
 		for (Point2D p : points) {
 			p.setLocation(rng.nextDouble(this.getWidth()), rng.nextDouble(getHeight()));
 		}
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		frame.setVisible(true);
 		addMouseListeners();
 	}
@@ -83,12 +79,18 @@ public class Panel extends JPanel {
 			g2.fillRect((int) p.getX() - 3, (int) p.getY() - 3, 6, 6);
 		}
 		g2.setColor(Color.GRAY.brighter());
-		QuadSegment cubic = new QuadSegment(p0, p1, p2);
+		LineSegment line = new LineSegment(p0, p1);
+		line.draw(g2, 1.0);
+		QuadSegment quad = new QuadSegment(p0, p1, p2);
+		quad.draw(g2, 1.0);
+		CubicSegment cubic = new CubicSegment(p0, p1, p2, p3);
 		cubic.draw(g2, 1.0);
 		g2.setColor(Color.BLACK);
 		g2.setStroke(THICK);
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		if (progressTime > 0) {
+			line.draw(g2, progressTime);
+			quad.draw(g2, progressTime);
 			cubic.draw(g2, progressTime);
 		}
 	}
