@@ -21,7 +21,7 @@ public class QuadSegment {
 		double tt = t * t;
 		double tu = t * u;
 		double uu = u * u;
-		
+
 		Point2D m0 = new Point2D.Double(
 				u * p0.getX() + t * p1.getX(),
 				u * p0.getY() + t * p1.getY());
@@ -29,7 +29,7 @@ public class QuadSegment {
 		Point2D q0 = new Point2D.Double(
 				uu * p0.getX() + 2 * tu * p1.getX() + tt * p2.getX(),
 				uu * p0.getY() + 2 * tu * p1.getY() + tt * p2.getY());
-		
+
 		return new QuadCurve2D.Double(
 				p0.getX(), p0.getY(),
 				m0.getX(), m0.getY(),

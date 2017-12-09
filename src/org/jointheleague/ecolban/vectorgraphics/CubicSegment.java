@@ -27,7 +27,7 @@ public class CubicSegment {
 		double ttu = tt * u;
 		double tuu = tu * u;
 		double uuu = uu * u;
-		
+
 		Point2D m0 = new Point2D.Double(
 				u * p0.getX() + t * p1.getX(),
 				u * p0.getY() + t * p1.getY());
@@ -48,8 +48,6 @@ public class CubicSegment {
 	}
 
 	public void draw(Graphics2D g2, double t) {
-		if (t > 0.0) {
-			g2.draw(interpolate(t));
-		}
+		g2.draw(interpolate(t));
 	}
 }

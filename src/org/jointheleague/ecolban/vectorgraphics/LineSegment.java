@@ -16,11 +16,11 @@ public class LineSegment {
 
 	private Line2D interpolate(double t) {
 		double u = 1 - t;
-		
+
 		Point2D m0 = new Point2D.Double(
 				u * p0.getX() + t * p1.getX(),
 				u * p0.getY() + t * p1.getY());
-		
+
 		return new Line2D.Double(p0, m0);
 	}
 
