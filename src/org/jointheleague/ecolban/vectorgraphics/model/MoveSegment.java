@@ -19,7 +19,7 @@ public class MoveSegment implements Segment {
     }
 
     @Override
-    public double getSize() {
+    public double size() {
         return 0.0;
     }
 

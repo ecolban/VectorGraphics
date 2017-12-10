@@ -21,7 +21,7 @@ public class CloseSegment implements Segment {
     }
 
     @Override
-    public double getSize() {
+    public double size() {
         return p0.distance(p1);
     }
 
@@ -31,6 +31,7 @@ public class CloseSegment implements Segment {
         return path;
     }
 
+    @Override
     public Path2D addTo(Path2D path, double t) {
         double u = 1 - t;
         path.lineTo(

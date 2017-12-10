@@ -7,12 +7,6 @@ public class LineSegment implements Segment {
 	private final Point2D p0;
 	private final Point2D p1;
 
-	public LineSegment(Point2D p0, Point2D p1) {
-		super();
-		this.p0 = p0;
-		this.p1 = p1;
-	}
-
 	public LineSegment(final Point2D p0, final double[] coordinates) {
 	    super();
 	    this.p0 = p0;
@@ -25,15 +19,17 @@ public class LineSegment implements Segment {
     }
 
     @Override
-    public double getSize() {
+    public double size() {
         return p0.distance(p1);
     }
 
+	@Override
 	public Path2D addTo(Path2D path) {
 	    path.lineTo(p1.getX(), p1.getY());
 	    return path;
     }
 
+	@Override
 	public Path2D addTo(Path2D path, double t) {
 		double u = 1 - t;
         path.lineTo(

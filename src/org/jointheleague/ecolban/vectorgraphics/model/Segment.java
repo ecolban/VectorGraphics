@@ -10,5 +10,5 @@ public interface Segment {
 
     boolean consumesTime();
 
-    double getSize();
+    double size();
 }

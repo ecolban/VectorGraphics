@@ -44,16 +44,10 @@ public class PartialPath {
         }
     }
 
-    public void reset() {
-        currentSegment = 0;
-        time = 0;
-    }
-
-
     public void incrementTime(double speed) {
         if (isComplete()) return;
 
-        time += speed / segments.get(currentSegment).getSize();
+        time += speed / segments.get(currentSegment).size();
         if (time > 1.0) time = 1.0;
         while (time >= 1.0 && currentSegment < segments.size() - 1) {
             currentSegment++;
