@@ -4,14 +4,12 @@ import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
 
 public class CubicSegment implements Segment {
-    private final Point2D p0;
     private final Point2D p1;
     private final Point2D p2;
     private final Point2D p3;
 
-    public CubicSegment(final Point2D p0, final double[] coordinates) {
+    public CubicSegment(final double[] coordinates) {
         super();
-        this.p0 = p0;
         this.p1 = new Point2D.Double(coordinates[0], coordinates[1]);
         this.p2 = new Point2D.Double(coordinates[2], coordinates[3]);
         this.p3 = new Point2D.Double(coordinates[4], coordinates[5]);
@@ -23,7 +21,7 @@ public class CubicSegment implements Segment {
     }
 
     @Override
-    public double size() {
+    public double length(Point2D p0) {
         return p0.distance(p1) + p1.distance(p2) + p2.distance(p3);
     }
 
@@ -38,15 +36,15 @@ public class CubicSegment implements Segment {
 
     @Override
     public Path2D addTo(Path2D path, double t) {
-        double u = 1 - t;
-        double tt = t * t;
-        double tu = t * u;
-        double uu = u * u;
-        double ttt = tt * t;
-        double ttu = tt * u;
-        double tuu = tu * u;
-        double uuu = uu * u;
-
+        final double u = 1 - t;
+        final double tt = t * t;
+        final double tu = t * u;
+        final double uu = u * u;
+        final double ttt = tt * t;
+        final double ttu = tt * u;
+        final double tuu = tu * u;
+        final double uuu = uu * u;
+        final Point2D p0 = path.getCurrentPoint();
         path.curveTo(
                 u * p0.getX() + t * p1.getX(),
                 u * p0.getY() + t * p1.getY(),

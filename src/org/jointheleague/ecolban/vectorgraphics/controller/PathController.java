@@ -9,11 +9,13 @@ import java.awt.font.TextLayout;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.PathIterator;
 import java.awt.geom.Rectangle2D;
+import java.util.HashSet;
+import java.util.Set;
 
 public class PathController {
-	
+
 	private static final int MARGIN = 20;
-	private PartialPath partialPath;
+	private Set<PartialPath> partialPaths = new HashSet<>();;
 
 	private Timer ticker = new Timer(10, e -> onTick());
 
@@ -26,18 +28,24 @@ public class PathController {
 	}
 
 	public void createModels() {
-		TextLayout textLayout = pathView.getTextLayout("Merry Xmas");
+		TextLayout textLayout = pathView.getTextLayout("$@&");
 		Rectangle2D bounds = textLayout.getBounds();
 		Shape outline = textLayout.getOutline(
 				AffineTransform.getTranslateInstance(MARGIN - bounds.getX(), MARGIN - bounds.getY()));
 		PathIterator pathIterator = outline.getPathIterator(null);
-		partialPath = new PartialPath(pathIterator);
-		pathView.setSize((int) bounds.getWidth() + 2 * MARGIN, (int) bounds.getHeight()+ 2 * MARGIN);
+		PartialPath partialPath = new PartialPath(pathIterator);
+		partialPaths.add(partialPath);
+		pathView.setSize((int) bounds.getWidth() + 2 * MARGIN, (int) bounds.getHeight() + 2 * MARGIN);
 		partialPath.addObserver(pathView);
 	}
 
 	private void onTick() {
-		partialPath.incrementTime(2.0);
-		if (partialPath.isComplete()) ticker.stop();
+		int numAlive = 0;
+		for (PartialPath p : partialPaths) {
+			if (!p.isComplete())
+				p.incrementTime(4.0);
+				numAlive++;
+		}
+		if (numAlive <= 0) ticker.stop();
 	}
 }

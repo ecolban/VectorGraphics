@@ -1,6 +1,7 @@
 package org.jointheleague.ecolban.vectorgraphics.model;
 
 import java.awt.geom.Path2D;
+import java.awt.geom.Point2D;
 
 public interface Segment {
 
@@ -10,5 +11,5 @@ public interface Segment {
 
     boolean consumesTime();
 
-    double size();
+    double length(Point2D p0);
 }

@@ -4,12 +4,10 @@ import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
 
 public class LineSegment implements Segment {
-	private final Point2D p0;
 	private final Point2D p1;
 
-	public LineSegment(final Point2D p0, final double[] coordinates) {
+	public LineSegment(final double[] coordinates) {
 	    super();
-	    this.p0 = p0;
 	    this.p1 = new Point2D.Double(coordinates[0], coordinates[1]);
     }
 
@@ -19,7 +17,7 @@ public class LineSegment implements Segment {
     }
 
     @Override
-    public double size() {
+    public double length(Point2D p0) {
         return p0.distance(p1);
     }
 
@@ -31,7 +29,8 @@ public class LineSegment implements Segment {
 
 	@Override
 	public Path2D addTo(Path2D path, double t) {
-		double u = 1 - t;
+		final double u = 1 - t;
+		final Point2D p0 = path.getCurrentPoint();
         path.lineTo(
                 u * p0.getX() + t * p1.getX(),
                 u * p0.getY() + t * p1.getY());
