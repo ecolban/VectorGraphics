@@ -27,10 +27,17 @@ public class QuadSegment implements Segment {
     @Override
     public Path2D addTo(Path2D path, double t) {
         final Point2D p0 = path.getCurrentPoint();
-        final double u = 1 - t;
-        final Point2D m0 = Segment.affineCombo(new Point2D[]{p0, p1}, new double[]{u, t});
-        final Point2D q0 = Segment.affineCombo(new Point2D[]{p0, p1, p2}, new double[]{u * u, 2 * t * u, t * t});
+        final Point2D m0 = LineSegment.getPointOnSegment(p0, p1, t);
+        final Point2D q0 = QuadSegment.getPointOnSegment(p0, p1, p2, t);
         path.quadTo(m0.getX(), m0.getY(), q0.getX(), q0.getY());
         return path;
+    }
+
+    public static Point2D getPointOnSegment(Point2D p0, Point2D p1, Point2D p2, double t) {
+        final double u = 1 - t;
+        final double uu = u * u;
+        final double ut = u * t;
+        final double tt = t * t;
+        return Segment.affineCombo(new Point2D[]{p0, p1, p2}, new double[]{uu, 2 * ut, tt});
     }
 }

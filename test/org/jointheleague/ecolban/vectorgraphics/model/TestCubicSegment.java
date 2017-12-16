@@ -11,50 +11,55 @@ import java.util.concurrent.ThreadLocalRandom;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-public class TestQuadSegment {
+public class TestCubicSegment {
 
-    private Point2D.Double p0;
-    private Point2D.Double p1;
-    private Point2D.Double p2;
-    private java.awt.geom.Path2D.Double path;
-    private QuadSegment quadSegment;
+    private static final double EPSILON = 1e-6;
+    private Point2D p0;
+    private Point2D p1;
+    private Point2D p2;
+    private Point2D p3;
+    private Path2D.Double path;
+    private CubicSegment cubicSegment;
 
     @Before
     public void setup() {
         p0 = new Point2D.Double(1.0, 2.1);
         p1 = new Point2D.Double(3.0, 6.1);
         p2 = new Point2D.Double(6.0, 1.2);
+        p3 = new Point2D.Double(9.1, 1.0);
         path = new Path2D.Double();
         path.moveTo(p0.getX(), p0.getY());
-        double[] coordinates = new double[]{p1.getX(), p1.getY(), p2.getX(), p2.getY(), 0, 0};
-        quadSegment = new QuadSegment(coordinates);
-        assertNotNull(quadSegment);
+        double[] coordinates = new double[]{p1.getX(), p1.getY(), p2.getX(), p2.getY(), p3.getX(), p3.getY()};
+        cubicSegment = new CubicSegment(coordinates);
+        assertNotNull(cubicSegment);
     }
 
     @Test
     public void testConstructor() {
-        assertNotNull(quadSegment);
+        assertNotNull(cubicSegment);
     }
 
     @Test
     public void testLength() {
-        assertEquals(p0.distance(p1) + p1.distance(p2), quadSegment.length(p0), 1e-6);
+        assertEquals(p0.distance(p1) + p1.distance(p2) + p2.distance(p3), cubicSegment.length(p0), EPSILON);
     }
 
     @Test
     public void testAddTo() {
         assertEquals(p0, path.getCurrentPoint());
         TestUtils.assertPathLength(1, path);
-        quadSegment.addTo(path);
+        cubicSegment.addTo(path);
         TestUtils.assertPathLength(2, path);
-        assertEquals(p2, path.getCurrentPoint());
+        assertEquals(p3, path.getCurrentPoint());
         double[] coords = new double[6];
         int type = TestUtils.getLastSegment(path, coords);
-        assertEquals(PathIterator.SEG_QUADTO, type);
+        assertEquals(PathIterator.SEG_CUBICTO, type);
         Point2D m0 = new Point2D.Double(coords[0], coords[1]);
         Point2D q0 = new Point2D.Double(coords[2], coords[3]);
+        Point2D c0 = new Point2D.Double(coords[4], coords[5]);
         TestUtils.assertEqualPoints(p1, m0);
         TestUtils.assertEqualPoints(p2, q0);
+        TestUtils.assertEqualPoints(p3, c0);
     }
 
     @Test
@@ -62,19 +67,19 @@ public class TestQuadSegment {
         double t0 = ThreadLocalRandom.current().nextDouble();
         assertEquals(p0, path.getCurrentPoint());
         TestUtils.assertPathLength(1, path);
-        quadSegment.addTo(path, t0);
+        cubicSegment.addTo(path, t0);
         TestUtils.assertPathLength(2, path);
-        Point2D pt = QuadSegment.getPointOnSegment(p0, p1, p2, t0);
-        TestUtils.assertEqualPoints(pt, path.getCurrentPoint());
+        TestUtils.assertEqualPoints(CubicSegment.getPointOnSegment(p0, p1, p2, p3, t0), path.getCurrentPoint());
         double[] coords = new double[6];
         int type = TestUtils.getLastSegment(path, coords);
-        assertEquals(PathIterator.SEG_QUADTO, type);
-        Point2D m0 = new Point2D.Double(coords[0], coords[1]);
-        Point2D q0 = new Point2D.Double(coords[2], coords[3]);
+        assertEquals(PathIterator.SEG_CUBICTO, type);
+        final Point2D m0 = new Point2D.Double(coords[0], coords[1]);
+        final Point2D q0 = new Point2D.Double(coords[2], coords[3]);
+        final Point2D c0 = new Point2D.Double(coords[4], coords[5]);
         for (double t = 0.0; t <= 1.0; t += 0.01) {
             TestUtils.assertEqualPoints(
-                    QuadSegment.getPointOnSegment(p0, p1, p2, t0 * t),
-                    QuadSegment.getPointOnSegment(p0, m0, q0, t));
+                    CubicSegment.getPointOnSegment(p0, p1, p2, p3, t0 * t),
+                    CubicSegment.getPointOnSegment(p0, m0, q0, c0, t));
         }
     }
 

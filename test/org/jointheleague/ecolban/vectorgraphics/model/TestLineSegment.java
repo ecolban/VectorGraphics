@@ -7,6 +7,7 @@ import java.awt.geom.Path2D;
 import java.awt.geom.PathIterator;
 import java.awt.geom.Point2D;
 import java.awt.geom.Point2D.Double;
+import java.util.concurrent.ThreadLocalRandom;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -16,7 +17,6 @@ public class TestLineSegment {
     private Double p0;
     private Double p1;
     private java.awt.geom.Path2D.Double path;
-    private double[] coordinates;
     private LineSegment lineSegment;
 
     @Before
@@ -25,7 +25,7 @@ public class TestLineSegment {
         p1 = new Point2D.Double(3.0, 6.1);
         path = new Path2D.Double();
         path.moveTo(p0.getX(), p0.getY());
-        coordinates = new double[]{p1.getX(), p1.getY(), 0, 0, 0, 0};
+        double[] coordinates = new double[]{p1.getX(), p1.getY(), 0, 0, 0, 0};
         lineSegment = new LineSegment(coordinates);
         assertNotNull(lineSegment);
     }
@@ -45,33 +45,27 @@ public class TestLineSegment {
         int type = TestUtils.getLastSegment(path, coords);
         assertEquals(PathIterator.SEG_LINETO, type);
         Point2D m0 = new Point2D.Double(coords[0], coords[1]);
-        TestUtils.assertEqualPoints(m0, p1);
+        TestUtils.assertEqualPoints(p1, m0);
     }
 
     @Test
     public void testAddToWithTime() {
-        double t0 = 0.23;
+        double t0 = ThreadLocalRandom.current().nextDouble();
         assertEquals(p0, path.getCurrentPoint());
+        TestUtils.assertPathLength(1, path);
         lineSegment.addTo(path, t0);
         TestUtils.assertPathLength(2, path);
-        double u = 1 - t0;
-        Point2D pt = Segment.affineCombo(new Point2D[]{p0, p1}, new double[]{u, t0});
+        final Point2D pt = LineSegment.getPointOnSegment(p0, p1, t0);
         TestUtils.assertEqualPoints(pt, path.getCurrentPoint());
         double[] coords = new double[6];
         int type = TestUtils.getLastSegment(path, coords);
         assertEquals(PathIterator.SEG_LINETO, type);
         Point2D m0 = new Point2D.Double(coords[0], coords[1]);
-        for (double t1 = 0.0; t1 <= 1.0; t1 += 0.1) {
-            double u1 = 1 - t1;
-            Point2D pt1 = Segment.affineCombo(
-                    new Point2D[]{p0, m0},
-                    new double[]{u1, t1});
-            double t2 = t0 * t1;
-            double u2 = 1 - t2;
-            Point2D pt2 = Segment.affineCombo(
-                    new Point2D[]{p0, p1},
-                    new double[]{u2, t2});
-            TestUtils.assertEqualPoints(pt1, pt2);
+        for (double t = 0.0; t <= 1.0; t += 0.01) {
+            TestUtils.assertEqualPoints(
+                    LineSegment.getPointOnSegment(p0, p1, t0 * t),
+                    LineSegment.getPointOnSegment(p0, m0, t));
         }
     }
+
 }

@@ -25,11 +25,13 @@ public class LineSegment implements Segment {
     @Override
     public Path2D addTo(Path2D path, double t) {
         final Point2D p0 = path.getCurrentPoint();
-        Point2D[] points = {p0, p1};
-        double[] coeff = {1 - t, t};
-        Point2D pt = Segment.affineCombo(points, coeff);
+        Point2D pt = getPointOnSegment(p0, p1, t);
         path.lineTo(pt.getX(), pt.getY());
         return path;
+    }
+
+    public static Point2D getPointOnSegment(Point2D p0, Point2D p1, double t) {
+        return Segment.affineCombo(new Point2D[]{p0, p1}, new double[]{1 - t, t});
     }
 
 }
