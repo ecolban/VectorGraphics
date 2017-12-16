@@ -14,11 +14,6 @@ public class CloseSegment implements Segment {
     }
 
     @Override
-    public boolean consumesTime() {
-        return true;
-    }
-
-    @Override
     public double length(final Point2D p0) {
         return p0.distance(p1);
     }
@@ -30,10 +25,10 @@ public class CloseSegment implements Segment {
     }
 
     @Override
-	public Path2D addTo(Path2D path, double t) {
-		final Point2D p0 = path.getCurrentPoint();
-		Point2D pt = Segment.affineCombo(new Point2D[] { p0, p1 }, new double[] { 1 - t, t });
-		path.lineTo(pt.getX(), pt.getY());
-		return path;
-	}
+    public Path2D addTo(Path2D path, double t) {
+        final Point2D p0 = path.getCurrentPoint();
+        Point2D pt = Segment.affineCombo(new Point2D[]{p0, p1}, new double[]{1 - t, t});
+        path.lineTo(pt.getX(), pt.getY());
+        return path;
+    }
 }
