@@ -23,7 +23,7 @@ public class PartialPath extends Observable {
 	}
 
 	private Segment getCurrentSegment() {
-		if (pathIterator.isDone()) return null;
+		assert !pathIterator.isDone();
 		double[] coordinates = new double[6];
 		int type = pathIterator.currentSegment(coordinates);
 		switch (type) {
@@ -44,17 +44,17 @@ public class PartialPath extends Observable {
 	}
 
 	public void incrementTime(double speed) {
-		if (isComplete()) return;
-		if (currentSegment.consumesTime()) {
-			time += speed / currentSegment.length(currentPath.getCurrentPoint());
-		}
-		if (time > 1.0)	time = 1.0;
+		time += speed / currentSegment.length(currentPath.getCurrentPoint());
+		time = Math.min(1.0, time);
 		while (time >= 1.0) {
 			currentSegment.addTo(currentPath);
 			pathIterator.next();
-			if (isComplete()) return;
+			if (pathIterator.isDone())
+				break;
 			currentSegment = getCurrentSegment();
-			if (currentSegment.consumesTime()) time = 0.0;
+			if (currentSegment.consumesTime()) {
+				time = 0.0;
+			}
 		}
 		setChanged();
 		notifyObservers();

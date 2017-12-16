@@ -30,12 +30,10 @@ public class CloseSegment implements Segment {
     }
 
     @Override
-    public Path2D addTo(Path2D path, double t) {
-        double u = 1 - t;
-        final Point2D p0 = path.getCurrentPoint();
-        path.lineTo(
-                u * p0.getX() + t * p1.getX(),
-                u * p0.getY() + t * p1.getY());
-        return path;
-    }
+	public Path2D addTo(Path2D path, double t) {
+		final Point2D p0 = path.getCurrentPoint();
+		Point2D pt = Segment.affineCombo(new Point2D[] { p0, p1 }, new double[] { 1 - t, t });
+		path.lineTo(pt.getX(), pt.getY());
+		return path;
+	}
 }

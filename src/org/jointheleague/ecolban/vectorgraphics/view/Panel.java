@@ -23,7 +23,7 @@ import org.jointheleague.ecolban.vectorgraphics.model.PartialPath;
 
 public class Panel extends JPanel implements PathView {
 
-	private static final Font BIG = new Font("Times New Roman", Font.PLAIN, 288);
+	private static final Font BIG = new Font("Times New Roman", Font.PLAIN, 300);
 	private JFrame frame;
 	private Set<PartialPath> models = new HashSet<>();
 

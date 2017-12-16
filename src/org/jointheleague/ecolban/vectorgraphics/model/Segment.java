@@ -12,4 +12,16 @@ public interface Segment {
     boolean consumesTime();
 
     double length(Point2D p0);
+    
+    static Point2D affineCombo(Point2D[] points, double[] coeff) {
+    	if (points == null || coeff == null || points.length != coeff.length) {
+    		throw new IllegalArgumentException();
+    	}
+    	double x = 0.0, y = 0.0;
+    	for (int i = 0; i < points.length; i++) {
+    		x += points[i].getX() * coeff[i];
+    		y += points[i].getY() * coeff[i];
+    	}
+    	return new Point2D.Double(x, y);
+    }
 }

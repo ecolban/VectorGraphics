@@ -28,7 +28,7 @@ public class PathController {
 	}
 
 	public void createModels() {
-		TextLayout textLayout = pathView.getTextLayout("$@&");
+		TextLayout textLayout = pathView.getTextLayout("Hello world!");
 		Rectangle2D bounds = textLayout.getBounds();
 		Shape outline = textLayout.getOutline(
 				AffineTransform.getTranslateInstance(MARGIN - bounds.getX(), MARGIN - bounds.getY()));
@@ -43,7 +43,7 @@ public class PathController {
 		int numAlive = 0;
 		for (PartialPath p : partialPaths) {
 			if (!p.isComplete())
-				p.incrementTime(4.0);
+				p.incrementTime(2.0);
 				numAlive++;
 		}
 		if (numAlive <= 0) ticker.stop();
