@@ -47,9 +47,9 @@ public class TestCubicSegment {
     @Test
     public void testAddTo() {
         assertEquals(p0, path.getCurrentPoint());
-        TestUtils.assertPathLength(1, path);
+        assertEquals(1, TestUtils.getPathLength(path));
         cubicSegment.addTo(path);
-        TestUtils.assertPathLength(2, path);
+        assertEquals(2, TestUtils.getPathLength(path));
         assertEquals(p3, path.getCurrentPoint());
         double[] coords = new double[6];
         int type = TestUtils.getLastSegment(path, coords);
@@ -66,9 +66,9 @@ public class TestCubicSegment {
     public void testAddToWithTime() {
         double t0 = ThreadLocalRandom.current().nextDouble();
         assertEquals(p0, path.getCurrentPoint());
-        TestUtils.assertPathLength(1, path);
+        assertEquals(1, TestUtils.getPathLength(path));
         cubicSegment.addTo(path, t0);
-        TestUtils.assertPathLength(2, path);
+        assertEquals(2, TestUtils.getPathLength(path));
         TestUtils.assertEqualPoints(CubicSegment.getPointOnSegment(p0, p1, p2, p3, t0), path.getCurrentPoint());
         double[] coords = new double[6];
         int type = TestUtils.getLastSegment(path, coords);

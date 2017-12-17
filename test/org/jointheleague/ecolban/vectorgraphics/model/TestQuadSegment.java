@@ -44,10 +44,8 @@ public class TestQuadSegment {
     @Test
     public void testAddTo() {
         assertEquals(p0, path.getCurrentPoint());
-        TestUtils.assertPathLength(1, path);
-        quadSegment.addTo(path);
-        TestUtils.assertPathLength(2, path);
-        assertEquals(p2, path.getCurrentPoint());
+        assertEquals(1, TestUtils.getPathLength(path));quadSegment.addTo(path);
+        assertEquals(2, TestUtils.getPathLength(path));assertEquals(p2, path.getCurrentPoint());
         double[] coords = new double[6];
         int type = TestUtils.getLastSegment(path, coords);
         assertEquals(PathIterator.SEG_QUADTO, type);
@@ -61,10 +59,8 @@ public class TestQuadSegment {
     public void testAddToWithTime() {
         double t0 = ThreadLocalRandom.current().nextDouble();
         assertEquals(p0, path.getCurrentPoint());
-        TestUtils.assertPathLength(1, path);
-        quadSegment.addTo(path, t0);
-        TestUtils.assertPathLength(2, path);
-        Point2D pt = QuadSegment.getPointOnSegment(p0, p1, p2, t0);
+        assertEquals(1, TestUtils.getPathLength(path));quadSegment.addTo(path, t0);
+        assertEquals(2, TestUtils.getPathLength(path));Point2D pt = QuadSegment.getPointOnSegment(p0, p1, p2, t0);
         TestUtils.assertEqualPoints(pt, path.getCurrentPoint());
         double[] coords = new double[6];
         int type = TestUtils.getLastSegment(path, coords);
