@@ -3,8 +3,7 @@ package org.jointheleague.ecolban.vectorgraphics.controller;
 import org.jointheleague.ecolban.vectorgraphics.model.PartialPath;
 
 import javax.swing.*;
-
-import java.awt.Shape;
+import java.awt.*;
 import java.awt.font.TextLayout;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.PathIterator;
@@ -14,7 +13,6 @@ import java.util.Set;
 
 public class PathController {
 
-    private static final int MARGIN = 20;
     private Set<PartialPath> partialPaths = new HashSet<>();;
 
     private Timer ticker = new Timer(10, e -> onTick());
@@ -28,14 +26,18 @@ public class PathController {
     }
 
     public void createModels() {
-        TextLayout textLayout = pathView.getTextLayout("Hello world!");
+        final String text = "Awesome!";
+        final Font font = new Font("Times New Roman", Font.PLAIN, 144);
+        TextLayout textLayout = pathView.getTextLayout(text, font);
         Rectangle2D bounds = textLayout.getBounds();
+        Dimension dimension = pathView.getSize();
+        double leftMargin = (dimension.getWidth() - bounds.getWidth()) / 2;
+        double topMargin = (dimension.getHeight() - bounds.getHeight()) / 2;
         Shape outline = textLayout.getOutline(
-                AffineTransform.getTranslateInstance(MARGIN - bounds.getX(), MARGIN - bounds.getY()));
+                AffineTransform.getTranslateInstance(leftMargin - bounds.getX(), topMargin - bounds.getY()));
         PathIterator pathIterator = outline.getPathIterator(null);
         PartialPath partialPath = new PartialPath(pathIterator);
         partialPaths.add(partialPath);
-        pathView.setSize((int) bounds.getWidth() + 2 * MARGIN, (int) bounds.getHeight() + 2 * MARGIN);
         partialPath.addObserver(pathView);
     }
 

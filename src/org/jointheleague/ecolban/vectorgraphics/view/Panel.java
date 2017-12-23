@@ -14,7 +14,6 @@ import java.util.Set;
 
 public class Panel extends JPanel implements PathView {
 
-    private static final Font BIG = new Font("Times New Roman", Font.PLAIN, 144);
     private JFrame frame;
     private Set<PartialPath> models = new HashSet<>();
 
@@ -27,21 +26,16 @@ public class Panel extends JPanel implements PathView {
         frame = new JFrame("Vector Graphics");
         frame.add(this);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        setPreferredSize(new Dimension(300, 100));
+        frame.setPreferredSize(Toolkit.getDefaultToolkit().getScreenSize());
         frame.pack();
         frame.setVisible(true);
         new PathController(this);
     }
 
-    public TextLayout getTextLayout(String text) {
+    public TextLayout getTextLayout(String text, Font font) {
         Graphics2D g2 = (Graphics2D) getGraphics();
         FontRenderContext frc = g2.getFontRenderContext();
-        return new TextLayout(text, BIG, frc);
-    }
-
-    public void setSize(int width, int height) {
-        setPreferredSize(new Dimension(width, height));
-        frame.pack();
+        return new TextLayout(text, font, frc);
     }
 
     @Override
@@ -49,7 +43,6 @@ public class Panel extends JPanel implements PathView {
         Graphics2D g2 = (Graphics2D) g;
         g2.setColor(Color.WHITE);
         g2.fillRect(0, 0, getWidth(), getHeight());
-        g2.setFont(BIG);
         g2.setColor(Color.BLACK);
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         for (PartialPath model : models) {
